@@ -42,8 +42,7 @@
 @endforeach
 
     <footer class="footer">
-      <span>全5件中 1〜4件を表示</span>
-      <div><button>‹</button> 1 / 2 <button>›</button></div>
+      {{$habits->links()}}
     </footer>
   </main>
 </body>

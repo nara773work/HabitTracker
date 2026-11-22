@@ -28,6 +28,11 @@ body {
   justify-content: space-between;
 }
 
+.footer nav svg {
+    width: 20px;
+    height: 20px;
+}
+
 .date,
 .message,
 .habit-info p,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Habit;
+use App\Models\TreeType;
 
 class HabitController extends Controller
 {
@@ -12,7 +13,7 @@ class HabitController extends Controller
      */
     public function index()
     {
-        $habits = Habit::with('runs.treeType')->get();
+        $habits = Habit::with('runs.treeType')->paginate(4);
 
         return view('index',compact('habits'));
     }
@@ -22,7 +23,9 @@ class HabitController extends Controller
      */
     public function create()
     {
-        //
+        $treeTypes = TreeType::orderBy('sort_order')->get();
+
+        return view('create', compact('treeTypes'));
     }
 
     /**
@@ -38,7 +41,7 @@ class HabitController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('show');
     }
 
     /**
