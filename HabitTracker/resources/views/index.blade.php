@@ -4,47 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>習慣の森</title>
-  <link rel="stylesheet" href="{{asset('css/index.css')}}">
+  <link rel="stylesheet" href="{{asset('css/common.css')}}">
 </head>
 <body>
   <main class="page">
-    <header class="header">
-      <div>
-        <p class="date">2026年11月22日（日）</p>
-        <h1>習慣の森</h1>
-        <p class="message">今日の小さな一歩を、年輪に。</p>
-      </div>
-      <button class="add-button">＋ 新しい習慣</button>
+    <header class="page-header">
+        <div>
+            <p class="eyebrow">習慣の森</p>
+            <h1>習慣一覧</h1>
+            <p class="description">小さな積み重ねを、木の年輪に。</p>
+        </div>
+        <a class="button button-main" href="{{ route('create') }}">
+            ＋ 新しい習慣
+        </a>
     </header>
 
-    <nav class="tabs" aria-label="習慣の状態">
-      <a class="selected" href="#active">取り組み中</a>
-      <a href="#completed">完成</a>
-      <a href="#withered">枯れた木</a>
-    </nav>
+    <section class="habit-list">
+        @forelse ($habits as $habit)
+            @php
+                $run = $habit->runs->first();
+            @endphp
 
-@foreach ($habits as $habit)
-    @php
-        $run = $habit->runs->first();
-    @endphp
+            <article class="habit-row">
+                <div class="tree-icon" aria-hidden="true"></div>
 
-    <section>
-        <h2>{{ $habit->name }}</h2>
+                <div class="habit-info">
+                    <h2>{{ $habit->name }}</h2>
 
-        @if ($run)
-            <p>
-                {{ $run->treeType->name }}
-                ・ {{ $run->ring_count }} / {{ $run->treeType->target_days }}日
-                ・ {{ $run->status }}
-            </p>
-        @endif
+                    @if ($run)
+                        <p>
+                            {{ $run->treeType->name }}
+                            ・ {{ $run->ring_count }} / {{ $run->treeType->target_days }}日
+                        </p>
+                    @else
+                        <p>木の記録はまだありません</p>
+                    @endif
+                </div>
+
+                <div class="habit-actions">
+                    <a class="button button-sub" href="{{ route('show', $habit) }}">
+                        詳細
+                    </a>
+                    <a class="button button-sub" href="{{ route('edit', $habit) }}">
+                        編集
+                    </a>
+
+                    <form action="{{ route('destroy', $habit) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="button button-delete" type="submit">削除</button>
+                    </form>
+                </div>
+            </article>
+        @empty
+            <p class="empty-message">習慣はまだありません。</p>
+        @endforelse
     </section>
-@endforeach
 
-    <footer class="footer">
-      <span>全5件中 1〜4件を表示</span>
-      <div><button>‹</button> 1 / 2 <button>›</button></div>
-    </footer>
-  </main>
+    @if ($habits->hasPages())
+        <nav class="pager" aria-label="ページ送り">
+            @if ($habits->onFirstPage())
+                <span class="disabled">前へ</span>
+            @else
+                <a href="{{ $habits->previousPageUrl() }}">前へ</a>
+            @endif
+
+            <span>{{ $habits->currentPage() }} / {{ $habits->lastPage() }}</span>
+
+            @if ($habits->hasMorePages())
+                <a href="{{ $habits->nextPageUrl() }}">次へ</a>
+            @else
+                <span class="disabled">次へ</span>
+            @endif
+        </nav>
+    @endif
+</main>
 </body>
 </html>
