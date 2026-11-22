@@ -23,43 +23,23 @@
       <a href="#withered">枯れた木</a>
     </nav>
 
-    <section class="habit-list" id="active">
-      <article class="habit">
-        <div class="tree" aria-hidden="true"></div>
-        <div class="habit-info">
-          <h2>毎朝5時に起きる</h2>
-          <p>シラカバ ・ 12 / 30日</p>
-        </div>
-        <div class="actions"><button aria-label="編集">✎</button><button aria-label="削除">⌫</button></div>
-      </article>
+@foreach ($habits as $habit)
+    @php
+        $run = $habit->runs->first();
+    @endphp
 
-      <article class="habit">
-        <div class="tree" aria-hidden="true"></div>
-        <div class="habit-info">
-          <h2>寝る前に本を読む</h2>
-          <p>ウメ ・ 24 / 100日</p>
-        </div>
-        <div class="actions"><button aria-label="編集">✎</button><button aria-label="削除">⌫</button></div>
-      </article>
+    <section>
+        <h2>{{ $habit->name }}</h2>
 
-      <article class="habit">
-        <div class="tree gray" aria-hidden="true"></div>
-        <div class="habit-info">
-          <h2>毎日ストレッチ</h2>
-          <p>ケヤキ ・ 5 / 365日 ・ <span class="status">枯れた木</span></p>
-        </div>
-        <div class="actions"><button aria-label="編集">✎</button><button aria-label="削除">⌫</button></div>
-      </article>
-
-      <article class="habit">
-        <div class="tree" aria-hidden="true"></div>
-        <div class="habit-info">
-          <h2>通勤後に英単語を復習</h2>
-          <p>スギ ・ 38 / 90日</p>
-        </div>
-        <div class="actions"><button aria-label="編集">✎</button><button aria-label="削除">⌫</button></div>
-      </article>
+        @if ($run)
+            <p>
+                {{ $run->treeType->name }}
+                ・ {{ $run->ring_count }} / {{ $run->treeType->target_days }}日
+                ・ {{ $run->status }}
+            </p>
+        @endif
     </section>
+@endforeach
 
     <footer class="footer">
       <span>全5件中 1〜4件を表示</span>

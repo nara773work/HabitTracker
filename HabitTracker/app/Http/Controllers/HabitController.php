@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Habit;
 
 class HabitController extends Controller
 {
@@ -11,7 +12,9 @@ class HabitController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $habits = Habit::with('runs.treeType')->get();
+
+        return view('index',compact('habits'));
     }
 
     /**

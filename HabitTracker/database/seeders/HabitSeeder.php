@@ -15,7 +15,6 @@ class HabitSeeder extends Seeder
      * 処理の流れは以下の通り
      * 習慣を登録→木の種類を探す→木の成長記録を登録→達成ログを登録
      * 
-     * 
      */
 
     public function run(): void
