@@ -18,7 +18,4 @@ Route::get('/', function () {
     return view('welcom');
 });
 
-Route::get('/habits', [HabitController::class, 'index'])->name('index');
-Route::get('/habits/create', [HabitController::class, 'create'])->name('create');
-Route::post('/habits', [HabitController::class, 'store'])->name('store');
-Route::get('/habits/{id}/show', [HabitController::class, 'show'])->name('show');
+Route::get('/habits', [HabitController::class, 'index']);
