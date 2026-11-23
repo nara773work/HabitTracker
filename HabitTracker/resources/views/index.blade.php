@@ -30,11 +30,11 @@
 
                 <div class="habit-info">
                     <h2>{{ $habit->name }}</h2>
+                    <p>タイミング：{{$habit->timing}}</p>
 
                     @if ($run)
                         <p>
-                            {{ $run->treeType->name }}
-                            ・ {{ $run->ring_count }} / {{ $run->treeType->target_days }}日
+                            {{ $run->treeType->name }}・ {{ $run->ring_count }} / {{ $run->treeType->target_days }}日
                         </p>
                     @else
                         <p>木の記録はまだありません</p>

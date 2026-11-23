@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tree_types',function(Blueprint $table){
+        Schema::create('tree_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100);
+            $table->string('name', 100);
             $table->integer('target_days');
             $table->integer('sort_order')->default(0);
             $table->timestamps();

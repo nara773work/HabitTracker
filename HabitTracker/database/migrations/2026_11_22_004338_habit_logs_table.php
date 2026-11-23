@@ -16,15 +16,16 @@ return new class extends Migration
             $table->foreignId('habit_run_id')
                 ->constrained()
                 ->cascadeOnDelete();
-                //木の成長記録が削除されるとログも削除される
+            // 木の成長記録が削除されるとログも削除される
             $table->date('completed_on');
             $table->integer('attempt_number')->default(1);
             $table->timestamps();
             $table->unique(['habit_run_id', 'completed_on']);
-            //同じ木について同じ日の達成は一回のみ
+            // 同じ木について同じ日の達成は一回のみ
         });
 
     }
+
     /**
      * Reverse the migrations.
      */

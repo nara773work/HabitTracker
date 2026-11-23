@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Habit;
 use App\Models\TreeType;
+use Illuminate\Http\Request;
 
 class HabitController extends Controller
 {
@@ -15,7 +15,7 @@ class HabitController extends Controller
     {
         $habits = Habit::with('runs.treeType')->paginate(4);
 
-        return view('index',compact('habits'));
+        return view('index', compact('habits'));
     }
 
     /**
@@ -42,11 +42,11 @@ class HabitController extends Controller
     public function show(Habit $habit)
     {
         $run = $habit->runs()
-            ->with(['treeType','habitlogs'])
+            ->with(['treeType', 'habitlogs'])
             ->latest('id')
             ->first();
 
-        return view('show',compact('run','habit'));
+        return view('show', compact('run', 'habit'));
     }
 
     /**

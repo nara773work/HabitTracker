@@ -29,20 +29,24 @@
         @method('PUT')
 
         <div class="form-field">
-            <label for="name">習慣の名前</label>
-            <input
-                id="name"
-                name="name"
-                type="text"
-                value="{{ old('name', $habit->name) }}"
-                maxlength="100"
-                required
-            >
+    <span class="field-label">習慣の名前(変更できません)</span>
+    <p class="readonly-value">{{ $habit->name }}</p>
+</div>
 
-            @error('name')
-                <p class="error-message">{{ $message }}</p>
-            @enderror
-        </div>
+<div class="form-field">
+    <label for="timing">タイミング</label>
+    <textarea
+        id="timing"
+        name="timing"
+        rows="3"
+        maxlength="200"
+        placeholder="例：帰宅後すぐ、歯を磨きながら"
+    >{{ old('timing') }}</textarea>
+
+    @error('timing')
+        <p class="error-message">{{ $message }}</p>
+    @enderror
+</div>
 
         <fieldset class="tree-field">
             <legend>育てる木</legend>
@@ -72,7 +76,7 @@
         </fieldset>
 
         <div class="form-actions">
-            <a class="button button-sub" href="{{ route('show', $habit) }}">
+            <a class="button button-sub" href="{{ route('index', $habit) }}">
                 キャンセル
             </a>
             <button class="button button-main" type="submit">変更を保存</button>

@@ -357,3 +357,45 @@ h1 {
     animation-iteration-count: 1 !important;
   }
 }
+
+.form-field textarea {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  padding: 11px 14px;
+  color: var(--text);
+  background: #fcfdf9;
+  border: 1px solid #dbe4d8;
+  border-radius: var(--radius-control);
+  font: inherit;
+  resize: vertical;
+}
+
+.form-field textarea:focus-visible {
+  border-color: var(--green-600);
+  outline: 3px solid rgb(78 114 91 / 25%);
+  outline-offset: 3px;
+}
+
+.when-sentence {
+  font-size: 12px;
+  color: #737c70;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--green-900);
+  font-weight: 700;
+}
+
+.readonly-value {
+  min-height: 47px;
+  margin: 0;
+  padding: 11px 14px;
+  color: #68756a;
+  background: #f1f4ee;
+  border: 1px solid #e1e8de;
+  border-radius: var(--radius-control);
+  cursor: default;
+}

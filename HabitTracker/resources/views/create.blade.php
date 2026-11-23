@@ -38,6 +38,22 @@
             @enderror
         </div>
 
+        <div class="form-field">
+    <label for="timing">タイミング</label>
+    <p class="when-sentence">※既存の行動に結び付けると習慣化しやすくなります</p>
+    <textarea
+        id="timing"
+        name="timing"
+        rows="3"
+        maxlength="200"
+        placeholder="例：帰宅後すぐ、歯を磨きながら"
+    >{{ old('timing') }}</textarea>
+
+    @error('timing')
+        <p class="error-message">{{ $message }}</p>
+    @enderror
+</div>
+
         <fieldset class="tree-field">
             <legend>育てる木</legend>
 

@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('habit_runs',function(Blueprint $table){
+        Schema::create('habit_runs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('habit_id')
                 ->constrained()
                 ->cascadeOnDelete();
-                //紐づく習慣が削除されるとこの木の成長自体も削除される
+            // 紐づく習慣が削除されるとこの木の成長自体も削除される
             $table->foreignId('tree_type_id')
                 ->constrained()
                 ->restrictOnDelete();
-                //この成長記録で使われている間は参照元の木は削除できない
+            // この成長記録で使われている間は参照元の木は削除できない
             $table->date('started_on');
             $table->date('restart_on')->nullable();
             $table->integer('ring_count')->default(1);
