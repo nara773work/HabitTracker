@@ -16,8 +16,7 @@
 
                 @if ($run)
                     <p>
-                        {{ $run->treeType->name }}
-                        ・目標 {{ $run->treeType->target_days }}日
+                        {{ $run->treeType->name }}・目標 {{ $run->treeType->target_days }}日
                     </p>
                 @endif
             </div>
