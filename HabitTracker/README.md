@@ -1,66 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+### 目次
+- [概要](#概要)
+- [デモ・スクリーンショット](#デモスクリーンショット)
+- [使用技術](#使用技術)
+- [機能・特徴](#機能特徴)
+- [利用手順](#利用手順)
+- [環境構築手順](#環境構築手順)
+- [初期データ](#初期データ)
+- [学習メモ](#学習メモ)
+- [作成者](#作成者)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
+# プロジェクト名：習慣の森
+習慣の継続日数を木の年輪の増加により視覚的に把握できる習慣トラッカーです。
 
-## About Laravel
+習慣化できた行動を見返すことができ、新たな行動の習慣化をサポートするアプリが欲しいという思いから作成しました。
+より習慣化しやすくするために「既存の行動に繋げる」ことができるよう導線をサポートしました。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+詳細設計は[HabitTracker/docs/詳細設計.md]を参照してください。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## デモ・スクリーンショット
+![デモGIF](demo.gif)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 使用技術
+- Laravel
+- 
 
-## Learning Laravel
+## 機能・特徴
+- 🖊 習慣化したい行動の新規作成・編集・削除
+- 🌲 継続日数 = 木の年輪の数
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 利用手順
+- 一覧画面には初期データが5つ保存されています。不要であれば削除してください。
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# 行動の新規作成手順
+- 新規作成ボタン（＋　新しい習慣）を押すと、作成画面へ推移します。
+- 作成画面で「習慣化したい行動」、「いつ行うか」、「木の種類」を入力してください。
+　エラーが発生した場合はエラー文に従って内容を修正してください。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# 行動を実行した際の記録手順
+- 該当の行動の詳細ボタンを押すと詳細画面に推移します。該当の行動を実行した際はこの画面に実装されている実行ボタンを押してください。
+- 誤ってボタンを押してしまった場合、もう一度押すと取り消すことができます。24時までならば何度でも実行済み・取り消しを変更することができます。
 
-## Laravel Sponsors
+# 継続が途切れてしまった場合
+- 1日スキップしてしまうと前日の木の年輪の色が灰色に変化します。この状態で実行ボタンを押すと「継続している」と判断されます。（年輪の色は灰色のまま）つまり、1日スキップしてしまっても継続記録は途切れません。
+- 2日以上スキップすると木全体が灰色に変化し、枯れてしまいます。この状態で実行ボタンを押すことはできません。再度やり直すことはできます。その場合、すでに継続している日数分上書きされ、その後新しい年輪が追加されていきます。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 行動の編集
+- 編集ボタンを押すと編集画面に推移します。習慣化したい行動を変更することはできません。木の種類や行動タイミングを変更することはできます。
 
-### Premium Partners
+# 行動の削除
+- 削除ボタンを押すと習慣化したい行動を削除することができます。一度削除すると取り消すことはできません。
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 環境構築手順
+# リポジトリをクローン
+```bash
+git clone 
+```
 
-## Contributing
+# ディレクトリに移動
+```bash
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
 
-## Code of Conduct
+# 依存関係をインストール
+```bash
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
 
-## Security Vulnerabilities
+# 環境変数を設定
+```bash
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+
+```
+
+# DB作成・初期データ投入 
+```bash
+sail artisan migrate:fresh --seed
+```
+※初期データが不要な場合は以下のコマンドを実行してください
+
+```bash
+sail artisan migrate:fresh 
+```
+
+# コードの整列
+```bash
+sail pint
+```
+
+# URL
+以下のURLをブラウザで開き、ページが正常に表示されたら成功です。
+http://localhost/habits
+
+## 初期データ
+-木の種類
+| 木の種類 | 目標日数(日) |
+| --- | --- | --- |
+| シラカバ | 30 |
+| スギ | 90 |
+| ウメ | 100 |
+| トチノキ | 180 | 
+| ケヤキ | 365 | 
+| クスノキ | 1000 | 
+| 屋久杉 | 3000 | 
+
+-習慣
+ 習慣名 | ステータス | 木の種類 | 目標日数(日) |
+| --- | --- | --- | --- |
+| 5時に起きる | ongoing | シラカバ | 30 |
+| スギ | 90 |
+| ウメ | 100 |
+| トチノキ | 180 | 
+| ケヤキ | 365 | 
+| クスノキ | 1000 | 
+| 屋久杉 | 3000 | 
+
+
+## 学習メモ
+# AIエージェント（codex）の活用について
+- 
+
+# 学習したこと
+
+# 今後の改善予定
+
+## 作成者
+[奈良那々美]-初心者エンジニア
