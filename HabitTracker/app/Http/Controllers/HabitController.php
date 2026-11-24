@@ -84,8 +84,14 @@ class HabitController extends Controller
             ->with(['treeType', 'habitlogs'])
             ->latest('id')
             ->first();
+        
+            $completedToday = $run
+    ? $run->habitlogs()
+        ->whereDate('completed_on', today())
+        ->exists()
+    : false;
 
-        return view('show', compact('run', 'habit'));
+        return view('show', compact('run', 'habit','completedToday'));
     }
 
     /**

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>習慣の詳細</title>
     <link rel="stylesheet" href="{{ asset('css/show.css') }}">
+    @vite('resources/js/app.jsx')
 </head>
 <body>
     <main class="page">
@@ -34,7 +35,12 @@
             @endphp
 
             <section class="detail">
-                <div class="tree">
+                <div
+    data-tree-growth
+    data-ring-count="{{ $run->ring_count }}"
+    data-target-days="{{ $run->treeType->target_days }}"
+    data-completed-today="{{ $completedToday ? '1' : '0' }}"
+>
                     <div class="tree-count">
                         {{ $count }}<span>日達成</span>
                     </div>
