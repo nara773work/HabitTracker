@@ -54,17 +54,33 @@
 # 環境構築手順
 ### リポジトリをクローン
 ```bash
-git clone 
+git clone https://github.com/nara773work/HabitTracker
 ```
 
 ### ディレクトリに移動
 ```bash
-
+cd ディレクトリ名
 ```
 
 ### 依存関係をインストール
 ```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+    laravelsail/php82-composer:latest \
+    composer require laravel/sail --dev
+```
 
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+    laravelsail/php82-composer:latest \
+    php artisan sail:install --with=mysql
 ```
 
 ### 環境変数を設定

@@ -84,14 +84,12 @@ class HabitController extends Controller
             ->with(['treeType', 'habitlogs'])
             ->latest('id')
             ->first();
-        
-            $completedToday = $run
-    ? $run->habitlogs()
-        ->whereDate('completed_on', today())
-        ->exists()
-    : false;
 
-        return view('show', compact('run', 'habit','completedToday'));
+        $completedToday = $run? $run->habitlogs()
+            ->whereDate('completed_on', today())
+            ->exists(): false;
+
+        return view('show', compact('run', 'habit', 'completedToday'));
     }
 
     /**
@@ -109,20 +107,20 @@ class HabitController extends Controller
      * 更新処理
      */
     public function update(HabitRequest $request, Habit $habit)
-{
-    // 習慣のタイミングを更新
-    $habit->update([
-        'timing' => $request->timing,
-    ]);
+    {
+        // 習慣のタイミングを更新
+        $habit->update([
+            'timing' => $request->timing,
+        ]);
 
-    $habit->runs()->update([
-        'tree_type_id' => $request->input('tree_type'),
-    ]);
+        $habit->runs()->update([
+            'tree_type_id' => $request->input('tree_type'),
+        ]);
 
-    return redirect()
-        ->route('index')
-        ->with('message', '習慣を編集しました✎✎');
-}
+        return redirect()
+            ->route('index')
+            ->with('message', '習慣を編集しました✎✎');
+    }
 
     /**
      * 削除処理
@@ -133,7 +131,7 @@ class HabitController extends Controller
 
         return redirect()
             ->route('index')
-            ->with('message','木を伐採してしまいました…🪓🪓');
+            ->with('message', '木を伐採してしまいました…🪓🪓');
     }
 
     /**

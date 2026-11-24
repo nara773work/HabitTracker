@@ -42,16 +42,17 @@ h1 {
 }
 
 .edit-button,
-.done-button {
+.done-button,
+.complete {
     padding: 10px 16px;
     border: 0;
     border-radius: 7px;
     font-size: 14px;
 }
 
-.edit-button {
-    color: #53604f;
-    background: #eeeee8;
+.complete-button {
+    color: #eeeee8;
+    background: #53604f;
 }
 
 .detail {
@@ -146,6 +147,12 @@ h1 {
     width: 100%;
     color: white;
     background: #476b4e;
+}
+
+.complete {
+    width: 100%;
+    color: #ffffff;
+    background:  #777f72;
 }
 
 .history {
