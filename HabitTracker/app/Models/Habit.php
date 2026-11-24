@@ -12,10 +12,9 @@ class Habit extends Model
 
     protected $fillable = [
         'name',
-        'tree',
-        'count',
+        'tree_type',
+        'timing',
         'status',
-        'skip_days',
     ];
 
     public function runs(): HasMany

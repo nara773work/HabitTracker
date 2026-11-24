@@ -399,3 +399,42 @@ h1 {
   border-radius: var(--radius-control);
   cursor: default;
 }
+
+.habit-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding-bottom: 10px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  color: #b4c4b6;
+}
+
+.habit-tab {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  color: var(--green-800);
+  background: var(--green-050);
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.habit-tab.is-active {
+  color: #04300d;
+  background: var(--green-800);
+}
+
+.vali {
+    color: #a33;
+}
+
+.success-message {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  color: #294638;
+  background: #e9efe8;
+  border: 1px solid #d5e2d3;
+  border-radius: 10px;
+}

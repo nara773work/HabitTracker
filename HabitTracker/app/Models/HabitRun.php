@@ -11,6 +11,13 @@ class HabitRun extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'ring_count',
+        'tree_type_id',
+        'ring_count',
+        'started_on',
+    ];
+
     public function treeType(): BelongsTo
     {
         return $this->belongsTo(TreeType::class);

@@ -14,10 +14,12 @@
 
     <header class="page-header">
         <div>
-            <p class="eyebrow">習慣の森</p>
             <h1>習慣を編集</h1>
             <p class="description">習慣名や育てる木を変更できます。</p>
         </div>
+        @error('timing')
+            <p class="error-message">{{ $message }}</p>
+        @enderror
     </header>
 
     <form
@@ -26,10 +28,10 @@
         method="POST"
     >
         @csrf
-        @method('PUT')
+        @method('PATCH')
 
         <div class="form-field">
-    <span class="field-label">習慣の名前(変更できません)</span>
+    <span class="field-label">習慣の名前 (変更できません)</span>
     <p class="readonly-value">{{ $habit->name }}</p>
 </div>
 
@@ -56,13 +58,9 @@
                     <label class="tree-option">
                         <input
                             type="radio"
-                            name="tree_type_id"
+                            name="tree_type"
                             value="{{ $treeType->id }}"
-                            @checked(
-                                old('tree_type_id', $run ? $run->tree_type_id : null)
-                                == $treeType->id
-                            )
-                            required
+                            @checked(old('tree_type', $run?->tree_type_id) == $treeType->id)
                         >
                         <span>{{ $treeType->name }}</span>
                         <small>{{ number_format($treeType->target_days) }}日</small>
@@ -70,7 +68,7 @@
                 @endforeach
             </div>
 
-            @error('tree_type_id')
+            @error('tree_type')
                 <p class="error-message">{{ $message }}</p>
             @enderror
         </fieldset>

@@ -18,6 +18,20 @@
             ＋ 新しい習慣
         </a>
     </header>
+@if (session('message'))
+            <p class="success-message">{{ session('message') }}</p>
+        @endif
+    <nav class="habit-tabs" aria-label="習慣の状態">
+    @foreach ($statuses as $status => $label)
+        <a
+            href="{{ route('index', ['status' => $status]) }}"
+            class="habit-tab {{ $currentStatus === $status ? 'is-active' : '' }}"
+            @if ($currentStatus === $status) aria-current="page" @endif
+        >
+            {{ $label }}
+        </a>
+    @endforeach
+</nav>
 
     <section class="habit-list">
         @forelse ($habits as $habit)

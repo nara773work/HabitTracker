@@ -17,7 +17,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             // 木の成長記録が削除されるとログも削除される
-            $table->date('completed_on');
+            $table->date('completed_on')->nullable();
+            // この木が完成した日
             $table->integer('attempt_number')->default(1);
             $table->timestamps();
             $table->unique(['habit_run_id', 'completed_on']);
