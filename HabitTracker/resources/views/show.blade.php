@@ -20,7 +20,11 @@
                     </p>
                 @endif
             </div>
+            @if (session('message'))
+                <p class="success-message">{{ session('message') }}</p>
+            @endif
         </header>
+
 
         @if ($run)
             @php
@@ -48,7 +52,20 @@
                     <section class="today">
                         <h2>今日の記録</h2>
                         <p>今日の達成を記録します。</p>
-                        <button class="done-button" type="button">今日はできた</button>
+                        @php
+                            $completedToday = $run->habitLogs()
+                                ->whereDate('completed_on', today())
+                                ->exists();
+                        @endphp
+
+                        <form action="{{ route('toggle', $habit) }}" method="POST">
+                            @csrf
+                            @method('PATCH')  
+
+                            <button type="submit" class="done-button">
+                                {{ $completedToday ? '今日の記録を取り消す' : '今日はできた' }}
+                            </button>
+                        </form>
                     </section>
                 </div>
             </section>

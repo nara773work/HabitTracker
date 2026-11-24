@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class HabitLog extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'completed_on',
+        'attempt_number',
+    ];
 }

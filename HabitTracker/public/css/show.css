@@ -188,6 +188,15 @@ h1 {
     border: 1px dashed #476b4e;
 }
 
+.success-message {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  color: #294638;
+  background: #e9efe8;
+  border: 1px solid #d5e2d3;
+  border-radius: 10px;
+}
+
 @media (max-width: 600px) {
     body {
         padding: 12px;
