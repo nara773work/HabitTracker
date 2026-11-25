@@ -80,16 +80,44 @@ class HabitController extends Controller
      */
     public function show(Habit $habit)
     {
+        // 木の成長記録もリレーションから取得する
         $run = $habit->runs()
             ->with(['treeType', 'habitlogs'])
             ->latest('id')
             ->first();
 
-        $completedToday = $run? $run->habitlogs()
+        // 実行の取り消すを行うために「本日分の達成記録」があるか調べる
+        $completedToday = $run ? $run->habitlogs()
             ->whereDate('completed_on', today())
-            ->exists(): false;
+            ->exists() : false;
 
-        return view('show', compact('run', 'habit', 'completedToday'));
+        //
+        $missedDays = 0;
+
+        if ($run) {
+            $startedOn = Carbon::parse(
+                $run->restart_on ?? $run->started_on
+            )->startOfDay();
+
+            $logDates = $run->habitLogs
+                ->map(fn ($log) => Carbon::parse($log->completed_on)->toDateString())
+                ->all();
+
+            $today = Carbon::today();
+
+            // 昨日、さらにその前の日の順に、最大2日分確認する
+            for ($daysAgo = 1; $daysAgo <= 2; $daysAgo++) {
+                $date = $today->copy()->subDays($daysAgo);
+
+                if ($date->lt($startedOn) || in_array($date->toDateString(), $logDates, true)) {
+                    break;
+                }
+
+                $missedDays++;
+            }
+        }
+
+        return view('show', compact('run', 'habit', 'completedToday', 'missedDays'));
     }
 
     /**
@@ -144,7 +172,69 @@ class HabitController extends Controller
     {
         $today = Carbon::today();
 
-        $run = $habit->runs()->latest('id')->first();
+        $run = $habit->runs()
+            ->with('treeType')
+            ->latest('id')
+            ->first();
+
+        // 開始日または育てなおした日以降の達成ログを取得
+        $startedOn = Carbon::parse(
+            $run->restart_on ?? $run->started_on
+        )->startOfDay();
+
+        $logDates = $run->habitLogs()
+            ->pluck('completed_on')
+            ->map(fn ($date) => Carbon::parse($date)->toDateString())
+            ->all();
+
+        // 昨日から連続して記録がない日数を数える（最大2日）
+        $missedDays = 0;
+
+        for ($daysAgo = 1; $daysAgo <= 2; $daysAgo++) {
+            $date = $today->copy()->subDays($daysAgo);
+
+            if (
+                $date->lt($startedOn) ||
+                in_array($date->toDateString(), $logDates, true)
+            ) {
+                break;
+            }
+
+            $missedDays++;
+        }
+
+        // 枯れ木なら、既存の年輪を茶色に戻して育てなおす
+        if ($run->status === 'withered') {
+            $nextAttempt = (int) ($run->habitLogs()->max('attempt_number') ?? 0) + 1;
+    $run->update([
+        'status' => 'ongoing',
+        'started_on' => $today,
+        'restart_on' => $today,
+        'ring_count' => 0,
+        'recovery_count' => 0,
+    ]);
+
+    $todayLog = $run->habitLogs()
+        ->whereDate('completed_on', $today)
+        ->first();
+
+    if ($todayLog) {
+        $todayLog->update([
+            'attempt_number' => $nextAttempt,
+        ]);
+    } else {
+        $run->habitLogs()->create([
+            'completed_on' => $today,
+            'attempt_number' => $nextAttempt,
+        ]);
+    }
+
+    $run->update([
+        'ring_count' => 1,
+    ]);
+
+    return back()->with('message', '新しい挑戦を始めましょう🌱');
+        }
 
         $log = $run->habitLogs()
             ->whereDate('completed_on', $today)
@@ -154,7 +244,6 @@ class HabitController extends Controller
             // 今日の記録を取り消す
             $log->delete();
 
-            // 年輪の数を減らす
             $run->update([
                 'ring_count' => max(0, $run->ring_count - 1),
             ]);
@@ -162,13 +251,23 @@ class HabitController extends Controller
             return back()->with('message', '本日の実行記録を取り消しました💧');
         }
 
-        // 今日の記録を追加して、年輪数を増やす
+        // 今日の記録を追加する
+        $attemptNumber = $run->habitLogs()->max('attempt_number') ?? 1;
+
         $run->habitLogs()->create([
             'completed_on' => $today,
+            'attempt_number' => $attemptNumber,
         ]);
 
-        // 指定したカラムの値を1増やしてDBに保存する
         $run->increment('ring_count');
+        $run->refresh();
+
+        // 目標日数に達したら完成状態にする
+        if ($run->ring_count >= $run->treeType->target_days) {
+            $run->update([
+                'status' => 'completed',
+            ]);
+        }
 
         return back()->with('message', '木が成長しました✨✨');
     }

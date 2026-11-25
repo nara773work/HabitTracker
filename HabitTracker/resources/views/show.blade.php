@@ -43,6 +43,9 @@
                     data-ring-count="{{ $run->ring_count }}"
                     data-target-days="{{ $run->treeType->target_days }}"
                     data-completed-today="{{ $completedToday ? '1' : '0' }}"
+                    data-status="{{ $run->status }}"
+                    data-recovery-count="{{ $run->recovery_count }}"
+                    data-missed-days="{{ $missedDays }}"
                 >
                     <div class="tree-count">
                         {{ $count }}<span>日達成</span>
@@ -68,7 +71,7 @@
 
                             @if ($count >= $target)
                                 <div class="complete">木は完成しています🌲</div>
-                            @elseif ($run->status === 'withered')
+                            @elseif ($run->status === 'withered' || $missedDays >= 2)
                                 <button type="submit" class="done-button">育てなおす🍂</button>
                             @else
                                 <button type="submit" class="done-button">

@@ -8,6 +8,9 @@ document.querySelectorAll('[data-tree-growth]').forEach((element) => {
         ringCount={element.dataset.ringCount}
         targetDays={element.dataset.targetDays}
         completedToday={element.dataset.completedToday === '1'}
+        mstatus={element.dataset.status}
+        recoveryCount={Number(element.dataset.recoveryCount)}
+        missedDays={Number(element.dataset.missedDays)}
     />
 );
 });

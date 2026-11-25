@@ -4,9 +4,14 @@ export default function TreeGrowth({
     ringCount = 0,
     targetDays = 100,
     completedToday = false,
+    missedDays = 0,
+    status = 'ongoing',
+    recoveryCount = 0,
 }) {
     const count = Math.max(0, Math.floor(Number(ringCount) || 0));
     const target = Math.max(1, Number(targetDays) || 1);
+    const missed = Math.max(0, Number(missedDays) || 0);
+    const restoredCount = Math.max(0, Number(recoveryCount) || 0);
 
     const ringStep = 6;
     const firstRadius = 14;
@@ -19,8 +24,12 @@ export default function TreeGrowth({
     const digits = String(count).length;
     const numberFontSize = Math.max(12, 36 - (digits - 1) * 6);
 
+    const isCompleted = status === 'completed';
+    const grayWholeTree =
+        !isCompleted && (status === 'withered' || missed >= 2);
+
     return (
-        <div className="tree-growth">
+        <div className={`tree-growth${grayWholeTree ? ' is-gray' : ''}`}>
             <svg
                 className="tree-growth__svg"
                 width={size}
@@ -33,44 +42,66 @@ export default function TreeGrowth({
                     cx={center}
                     cy={center}
                     r={outerRadius}
-                    fill="#f3d2b7"
+                    fill={grayWholeTree ? '#c8ccc8' : '#f3d2b7'}
                     stroke="none"
                 />
 
                 {Array.from({ length: count }, (_, index) => {
-    const ringNumber = index + 1;
-    const isTodayRing = completedToday && ringNumber === count;
-    const isTenMark = ringNumber % 10 === 0;
-    const todayStrokeWidth = ringStep * 0.5;
+                    const ringNumber = index + 1;
+                    const isTodayRing =
+                        completedToday && ringNumber === count;
+                    const isTenMark = ringNumber % 10 === 0;
 
-    const stroke = isTodayRing
-        ? '#5b3928'
-        : isTenMark
-            ? '#f7e4d4'
-            : '#e6b995';
+                    const isYesterdayRing =
+                        !isCompleted &&
+                        !grayWholeTree &&
+                        missed === 1 &&
+                        ringNumber === (completedToday ? count - 1 : count);
 
-    const radius = isTodayRing
-        ? outerRadius - todayStrokeWidth / 2
-        : firstRadius + (ringNumber - 0.5) * ringStep;
+                    const isGrayRing =
+                        grayWholeTree || isYesterdayRing;
 
-    return (
-        <circle
-            key={ringNumber}
-            cx={center}
-            cy={center}
-            r={radius}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={isTodayRing ? todayStrokeWidth : 1}
-        />
-    );
-})}
+                    const isBrownRing =
+                        isCompleted ||
+                        ringNumber <= restoredCount ||
+                        isTodayRing;
+
+                    const stroke = isGrayRing
+                        ? '#a5aaa5'
+                        : isBrownRing
+                            ? '#79543c'
+                            : isTenMark
+                                ? '#e6cbb5'
+                                : '#d9ad8c';
+
+                    const strokeWidth = isGrayRing
+                        ? ringStep * 0.35
+                        : isBrownRing
+                            ? ringStep * 0.45
+                            : 1;
+
+                    const radius = isTodayRing
+                        ? outerRadius - strokeWidth / 2
+                        : firstRadius + (ringNumber - 0.5) * ringStep;
+
+                    return (
+                        <circle
+                            key={ringNumber}
+                            cx={center}
+                            cy={center}
+                            r={radius}
+                            fill="none"
+                            stroke={stroke}
+                            strokeWidth={strokeWidth}
+                        />
+                    );
+                })}
 
                 <circle
                     cx={center}
                     cy={center}
                     r="5"
-                    fill="#5b3928"
+                    fill={grayWholeTree ? '#858c85' : '#79543c'}
                 />
             </svg>
 
