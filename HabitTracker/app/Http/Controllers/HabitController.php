@@ -142,12 +142,24 @@ if ($count >= $targetDays && $run->status !== 'completed') {
      * 編集画面表示
      */
     public function edit(Habit $habit)
-    {
-        $treeTypes = TreeType::orderBy('sort_order')->get();
-        $run = $habit->runs()->latest('id')->first();
+{
+    $run = $habit->runs()
+        ->with('treeType')
+        ->latest('id')
+        ->first();
 
-        return view('edit', compact('habit', 'treeTypes', 'run'));
+    $query = TreeType::query();
+
+    if ($run?->treeType) {
+        $query->where('target_days', '<=', $run->treeType->target_days);
     }
+
+    $treeTypes = $query
+        ->orderBy('sort_order')
+        ->get();
+
+    return view('edit', compact('habit', 'treeTypes', 'run'));
+}
 
     /**
      * 更新処理
