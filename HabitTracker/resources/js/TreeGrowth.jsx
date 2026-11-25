@@ -75,14 +75,19 @@ export default function TreeGrowth({
                                 : '#d9ad8c';
 
                     const strokeWidth = isGrayRing
-                        ? ringStep * 0.35
+                        ? ringStep * 0.3
                         : isBrownRing
                             ? ringStep * 0.45
                             : 1;
 
-                    const radius = isTodayRing
-                        ? outerRadius - strokeWidth / 2
-                        : firstRadius + (ringNumber - 0.5) * ringStep;
+                    const grayStrokeWidth = ringStep * 0.35;
+const todayStrokeWidth = ringStep * 0.45;
+
+const radius = isTodayRing
+    ? outerRadius - todayStrokeWidth / 2
+    : isYesterdayRing && !completedToday
+        ? outerRadius - grayStrokeWidth / 2
+        : firstRadius + (ringNumber - 0.5) * ringStep;;
 
                     return (
                         <circle

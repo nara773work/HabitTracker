@@ -12,13 +12,13 @@ class HabitRun extends Model
     use HasFactory;
 
     protected $fillable = [
-    'habit_id',
-    'tree_type_id',
-    'started_on',
-    'restart_on',
-    'ring_count',
-    'recovery_count',
-    'status',
+        'habit_id',
+        'tree_type_id',
+        'started_on',
+        'restart_on',
+        'ring_count',
+        'recovery_count',
+        'status',
     ];
 
     public function treeType(): BelongsTo

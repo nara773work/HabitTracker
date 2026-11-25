@@ -21,8 +21,8 @@ class HabitSeeder extends Seeder
         $samples = [
             [
                 'name' => '毎朝5時に起きる',
-                'tree' => 'シラカバ',
-                'count' => 12,
+                'tree' => 'トチノキ',
+                'count' => 179,
                 'status' => 'ongoing',
                 'timing' => '朝',
                 'skip_days' => 1,
@@ -30,7 +30,7 @@ class HabitSeeder extends Seeder
             [
                 'name' => '10分間読書する',
                 'tree' => 'ウメ',
-                'count' => 24,
+                'count' => 50,
                 'status' => 'ongoing',
                 'timing' => '就寝前',
                 'skip_days' => 0,

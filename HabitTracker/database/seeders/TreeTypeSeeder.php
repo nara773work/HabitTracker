@@ -19,7 +19,6 @@ class TreeTypeSeeder extends Seeder
             ['name' => 'ウメ', 'target_days' => 100, 'sort_order' => 4],
             ['name' => 'トチノキ', 'target_days' => 180, 'sort_order' => 5],
             ['name' => 'クスノキ', 'target_days' => 1000, 'sort_order' => 6],
-            ['name' => '屋久杉', 'target_days' => 3000, 'sort_order' => 7],
         ]);
     }
 }

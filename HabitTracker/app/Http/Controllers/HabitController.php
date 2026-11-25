@@ -117,6 +117,24 @@ class HabitController extends Controller
             }
         }
 
+        if (
+            $missedDays >= 2 &&
+            $run->status !== 'completed' &&
+            $run->status !== 'withered'
+        ) {
+            $run->status = 'withered';
+            $run->save();
+        }
+
+        $targetDays = (int) $run->treeType->target_days;
+$count = (int) $run->ring_count;
+
+if ($count >= $targetDays && $run->status !== 'completed') {
+    $run->status = 'completed';
+    $run->save();
+}
+    
+
         return view('show', compact('run', 'habit', 'completedToday', 'missedDays'));
     }
 
@@ -206,34 +224,34 @@ class HabitController extends Controller
         // 枯れ木なら、既存の年輪を茶色に戻して育てなおす
         if ($run->status === 'withered') {
             $nextAttempt = (int) ($run->habitLogs()->max('attempt_number') ?? 0) + 1;
-    $run->update([
-        'status' => 'ongoing',
-        'started_on' => $today,
-        'restart_on' => $today,
-        'ring_count' => 0,
-        'recovery_count' => 0,
-    ]);
+            $run->update([
+                'status' => 'ongoing',
+                'started_on' => $today,
+                'restart_on' => $today,
+                'ring_count' => 0,
+                'recovery_count' => 0,
+            ]);
 
-    $todayLog = $run->habitLogs()
-        ->whereDate('completed_on', $today)
-        ->first();
+            $todayLog = $run->habitLogs()
+                ->whereDate('completed_on', $today)
+                ->first();
 
-    if ($todayLog) {
-        $todayLog->update([
-            'attempt_number' => $nextAttempt,
-        ]);
-    } else {
-        $run->habitLogs()->create([
-            'completed_on' => $today,
-            'attempt_number' => $nextAttempt,
-        ]);
-    }
+            if ($todayLog) {
+                $todayLog->update([
+                    'attempt_number' => $nextAttempt,
+                ]);
+            } else {
+                $run->habitLogs()->create([
+                    'completed_on' => $today,
+                    'attempt_number' => $nextAttempt,
+                ]);
+            }
 
-    $run->update([
-        'ring_count' => 1,
-    ]);
+            $run->update([
+                'ring_count' => 1,
+            ]);
 
-    return back()->with('message', '新しい挑戦を始めましょう🌱');
+            return back()->with('message', '新しい挑戦を始めましょう🌱');
         }
 
         $log = $run->habitLogs()
