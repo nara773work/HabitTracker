@@ -27,11 +27,13 @@
 ![edit画面](/HabitTracker/pictures/習慣の森_edit.png)
 
 ### デモ動画
-<video src="./HabitTracker/videos/index.mp4" controls width="720"></video>
-<video src="./HabitTracker/videos/create.mp4" controls width="720"></video>
-<video src="./HabitTracker/videos/done.mp4" controls width="720"></video>
-<video src="./HabitTracker/videos/edit.mp4" controls width="720"></video>
-<video src="./HabitTracker/videos/delete.mp4" controls width="720"></video>
+※mp4形式のためダウンロードして右クリックから「新しいタブで開く」を選択するか、ダウンロードしてください。
+
+![一覧画面](/HabitTracker/videos/index.mp4)
+![新規作成](/HabitTracker/videos/create.mp4)
+![実行ボタン](/HabitTracker/videos/done.mp4)
+![削除動作](/HabitTracker/videos/delete.mp4)
+![編集動作](/HabitTracker/videos/edit.mp4)
 
 ## 使用技術
 - PHP8.5.12
