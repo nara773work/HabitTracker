@@ -19,13 +19,19 @@
 詳細設計は[HabitTracker/docs/詳細設計.md]を参照してください。
 
 ## デモ・スクリーンショット
+### スクリーンショット
 ![index画面](/HabitTracker/pictures/習慣の森_index.png)
 ![show画面](/HabitTracker/pictures/習慣の森_show.png)
 ![show_done画面](/HabitTracker/pictures/習慣の森_show_done.png)
 ![create画面](/HabitTracker/pictures/習慣の森_create.png)
 ![edit画面](/HabitTracker/pictures/習慣の森_edit.png)
 
-![デモGIF](demo.gif)
+### デモ動画
+![一覧画面](/HabitTracker/videos/index.mp4)
+![新規作成](/HabitTracker/videos/create.mp4)
+![実行ボタン](/HabitTracker/videos/done.mp4)
+![削除動作](/HabitTracker/videos/delete.mp4)
+![編集動作](/HabitTracker/videos/edit.mp4)
 
 ## 使用技術
 - PHP8.5.12
