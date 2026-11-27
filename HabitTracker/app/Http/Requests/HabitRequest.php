@@ -28,9 +28,10 @@ class HabitRequest extends FormRequest
         ];
 
         if ($this->isMethod('POST')) {
-        $rules['name'] = ['required', 'string', 'max:100'];
-    }
-     return $rules;
+            $rules['name'] = ['required', 'string', 'max:100'];
+        }
+
+        return $rules;
     }
 
     public function messages(): array

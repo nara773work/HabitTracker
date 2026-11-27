@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateHabitRunStatus;
 use App\Http\Requests\HabitRequest;
 use App\Models\Habit;
 use App\Models\TreeType;
@@ -77,15 +78,23 @@ class HabitController extends Controller
      * 詳細画面表示
      *
      * 実行ボタンはtoggleで管理する
+     *
+     * 枯れ木、完成木の判定はactionに分離する
      */
-    public function show(Habit $habit)
+    public function show(Habit $habit, UpdateHabitRunStatus $updateStatus)
     {
         $run = $habit->runs()
             ->with(['treeType', 'habitlogs'])
             ->latest('id')
             ->first();
 
-        return view('show', compact('run', 'habit'));
+        $missedDays = 0;
+
+        if ($run) {
+            $missedDays = $updateStatus->handle($run);
+        }
+
+        return view('show', compact('run', 'habit', 'missedDays'));
     }
 
     /**
@@ -93,8 +102,20 @@ class HabitController extends Controller
      */
     public function edit(Habit $habit)
     {
-        $treeTypes = TreeType::orderBy('sort_order')->get();
-        $run = $habit->runs()->latest('id')->first();
+        $run = $habit->runs()
+            ->with('treeType')
+            ->latest('id')
+            ->first();
+
+        $query = TreeType::query();
+
+        if ($run?->treeType) {
+            $query->where('target_days', '<=', $run->treeType->target_days);
+        }
+
+        $treeTypes = $query
+            ->orderBy('sort_order')
+            ->get();
 
         return view('edit', compact('habit', 'treeTypes', 'run'));
     }
@@ -103,20 +124,20 @@ class HabitController extends Controller
      * 更新処理
      */
     public function update(HabitRequest $request, Habit $habit)
-{
-    // 習慣のタイミングを更新
-    $habit->update([
-        'timing' => $request->timing,
-    ]);
+    {
+        // 習慣のタイミングを更新
+        $habit->update([
+            'timing' => $request->timing,
+        ]);
 
-    $habit->runs()->update([
-        'tree_type_id' => $request->input('tree_type'),
-    ]);
+        $habit->runs()->update([
+            'tree_type_id' => $request->input('tree_type'),
+        ]);
 
-    return redirect()
-        ->route('index')
-        ->with('message', '習慣を編集しました✎✎');
-}
+        return redirect()
+            ->route('index')
+            ->with('message', '習慣を編集しました✎✎');
+    }
 
     /**
      * 削除処理
@@ -127,7 +148,7 @@ class HabitController extends Controller
 
         return redirect()
             ->route('index')
-            ->with('message','木を伐採してしまいました…🪓🪓');
+            ->with('message', '木を伐採してしまいました…🪓🪓');
     }
 
     /**
@@ -139,33 +160,50 @@ class HabitController extends Controller
     public function toggle(Habit $habit)
     {
         $today = Carbon::today();
-
         $run = $habit->runs()->latest('id')->first();
+
+        if ($run->status === 'withered') {
+            $nextAttempt = (int) ($run->habitLogs()->max('attempt_number') ?? 0) + 1;
+
+            $run->update([
+                'status' => 'ongoing',
+                'started_on' => $today,
+                'restart_on' => $today,
+                'ring_count' => 1,
+                'recovery_count' => 0,
+            ]);
+
+            $run->habitLogs()->create([
+                'completed_on' => $today,
+                'attempt_number' => $nextAttempt,
+            ]);
+
+            return back()->with('message', '新しい挑戦を始めましょう🌱');
+        }
 
         $log = $run->habitLogs()
             ->whereDate('completed_on', $today)
             ->first();
 
         if ($log) {
-            // 今日の記録を取り消す
             $log->delete();
 
-            // 年輪の数を減らす
             $run->update([
-                'ring_count' => max(0, $run->ring_count - 1),
+                'ring_count' => max(0, (int) $run->ring_count - 1),
             ]);
 
             return back()->with('message', '本日の実行記録を取り消しました💧');
         }
 
-        // 今日の記録を追加して、年輪数を増やす
+        $attemptNumber = (int) ($run->habitLogs()->max('attempt_number') ?? 1);
+
         $run->habitLogs()->create([
             'completed_on' => $today,
+            'attempt_number' => $attemptNumber,
         ]);
 
-        // 指定したカラムの値を1増やしてDBに保存する
         $run->increment('ring_count');
 
-        return back()->with('message', '木が成長しました✨✨');
+        return back()->with('message', '木が成長しました✨');
     }
 }

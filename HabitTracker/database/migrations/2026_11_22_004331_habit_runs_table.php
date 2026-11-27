@@ -23,7 +23,7 @@ return new class extends Migration
             // この成長記録で使われている間は参照元の木は削除できない
             $table->date('started_on');
             $table->date('restart_on')->nullable();
-            $table->integer('ring_count')->default(1);
+            $table->integer('ring_count')->default(0);
             $table->integer('recovery_count')->default(0);
             $table->string('status')->default('ongoing');
             $table->timestamps();

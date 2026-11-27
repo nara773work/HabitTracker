@@ -21,16 +21,16 @@ class HabitSeeder extends Seeder
         $samples = [
             [
                 'name' => '毎朝5時に起きる',
-                'tree' => 'シラカバ',
-                'count' => 12,
+                'tree' => 'トチノキ',
+                'count' => 179,
                 'status' => 'ongoing',
                 'timing' => '朝',
-                'skip_days' => 0,
+                'skip_days' => 1,
             ],
             [
                 'name' => '10分間読書する',
                 'tree' => 'ウメ',
-                'count' => 24,
+                'count' => 50,
                 'status' => 'ongoing',
                 'timing' => '就寝前',
                 'skip_days' => 0,
@@ -57,7 +57,7 @@ class HabitSeeder extends Seeder
                 'count' => 30,
                 'status' => 'completed',
                 'timing' => '朝、夜の散歩',
-                'skip_days' => 0,
+                'skip_days' => 1,
             ],
         ];
 
@@ -75,14 +75,17 @@ class HabitSeeder extends Seeder
                 ->where('name', $sample['tree'])
                 ->first();
 
+            $count = $sample['count'];
+            $skipDays = $sample['skip_days'];
+
+            // 達成ログを作り始める日
+            $startedOn = $today->copy()->subDays($count + $skipDays);
+
             // habit_runsに木の成長状態を登録し、そのIDを取得する
             $habitRunId = DB::table('habit_runs')->insertGetId([
                 'habit_id' => $habitId,
                 'tree_type_id' => $treeType->id,
-                'started_on' => $today
-                    ->copy()// $today自体を変更しないようにコピーする
-                    ->subDays($sample['count'] + $sample['skip_days'])// 指定分だけ日付を戻す
-                    ->toDateString(), // 時刻を除いたYYYY-MM-DDの形にする
+                'started_on' => $startedOn->toDateString(),
                 'restart_on' => null,
                 'ring_count' => $sample['count'],
                 'recovery_count' => 0,
@@ -94,14 +97,11 @@ class HabitSeeder extends Seeder
             // 達成した日ごとにhabit_logsを登録（カウントの数だけログを作る）
             $logs = [];
 
-            for ($i = 0; $i < $sample['count']; $i++) {
-                $daysAgo = $sample['count'] + $sample['skip_days'] - $i;
-
+            for ($i = 0; $i < $count; $i++) {
                 $logs[] = [
                     'habit_run_id' => $habitRunId,
-                    'completed_on' => $today
-                        ->copy()
-                        ->subDays($daysAgo)
+                    'completed_on' => $startedOn->copy()
+                        ->addDays($i)
                         ->toDateString(),
                     'attempt_number' => 1,
                     'created_at' => now(),
@@ -109,7 +109,9 @@ class HabitSeeder extends Seeder
                 ];
             }
 
-            DB::table('habit_logs')->insert($logs);
+            if (! empty($logs)) {
+                DB::table('habit_logs')->insert($logs);
+            }
         }
     }
 }

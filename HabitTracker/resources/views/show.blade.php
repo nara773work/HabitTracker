@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>習慣の詳細</title>
     <link rel="stylesheet" href="{{ asset('css/show.css') }}">
+    @vite('resources/js/app.jsx')
 </head>
 <body>
     <main class="page">
@@ -31,10 +32,21 @@
                 $count = $run->ring_count;
                 $target = $run->treeType->target_days;
                 $progress = min(100, round($count / $target * 100));
+                $completedToday = $run->habitLogs()
+                    ->whereDate('completed_on', today())
+                    ->exists();
             @endphp
 
             <section class="detail">
-                <div class="tree">
+                <div
+                    data-tree-growth
+                    data-ring-count="{{ $run->ring_count }}"
+                    data-target-days="{{ $run->treeType->target_days }}"
+                    data-completed-today="{{ $completedToday ? '1' : '0' }}"
+                    data-status="{{ $run->status }}"
+                    data-recovery-count="{{ $run->recovery_count }}"
+                    data-missed-days="{{ $missedDays }}"
+                >
                     <div class="tree-count">
                         {{ $count }}<span>日達成</span>
                     </div>
@@ -52,19 +64,20 @@
                     <section class="today">
                         <h2>今日の記録</h2>
                         <p>今日の達成を記録します。</p>
-                        @php
-                            $completedToday = $run->habitLogs()
-                                ->whereDate('completed_on', today())
-                                ->exists();
-                        @endphp
 
                         <form action="{{ route('toggle', $habit) }}" method="POST">
                             @csrf
                             @method('PATCH')  
 
-                            <button type="submit" class="done-button">
-                                {{ $completedToday ? '今日の記録を取り消す' : '今日はできた' }}
-                            </button>
+                            @if ($count >= $target)
+                                <div class="complete">木は完成しています🌲</div>
+                            @elseif ($run->status === 'withered' || $missedDays >= 2)
+                                <button type="submit" class="done-button">育てなおす🍂</button>
+                            @else
+                                <button type="submit" class="done-button">
+                                    {{ $completedToday ? '今日の記録を取り消す' : '今日はできた' }}
+                                </button>
+                            @endif
                         </form>
                     </section>
                 </div>
